@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/repositories/monitored-content.repository.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050343,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050343,
+            "name": "Commit-0",
+            "content": "import { prisma } from \"../db/prisma.js\";\r\n\r\nexport async function upsertMonitoredContent({\r\n  socialAccountId,\r\n  contentUrl,\r\n  ...data\r\n}) {\r\n  return prisma.monitoredContent.upsert({\r\n    where: {\r\n      socialAccountId_contentUrl: {\r\n        socialAccountId,\r\n        contentUrl,\r\n      },\r\n    },\r\n    update: data,\r\n    create: {\r\n      socialAccountId,\r\n      contentUrl,\r\n      ...data,\r\n    },\r\n  });\r\n}\r\n\r\nexport async function createMonitoredContent(data) {\r\n  return prisma.monitoredContent.create({ data });\r\n}\r\n\r\nexport async function findMonitoredContentById(id) {\r\n  return prisma.monitoredContent.findUnique({\r\n    where: { id },\r\n    include: {\r\n      socialAccount: true,\r\n      engagementMetrics: { orderBy: { capturedAt: \"desc\" }, take: 1 },\r\n    },\r\n  });\r\n}\r\n\r\nexport async function findMonitoredContentBySocialAccountId(socialAccountId) {\r\n  return prisma.monitoredContent.findMany({\r\n    where: { socialAccountId },\r\n    orderBy: { lastSyncedAt: \"desc\" },\r\n    include: {\r\n      engagementMetrics: { orderBy: { capturedAt: \"desc\" }, take: 1 },\r\n    },\r\n  });\r\n}\r\n\r\nexport async function findMonitoredContentByUserId(userId) {\r\n  return prisma.monitoredContent.findMany({\r\n    where: { userId },\r\n    orderBy: { lastSyncedAt: \"desc\" },\r\n    include: {\r\n      socialAccount: true,\r\n      engagementMetrics: { orderBy: { capturedAt: \"desc\" }, take: 1 },\r\n    },\r\n  });\r\n}\r\n\r\nexport async function updateMonitoredContent(id, data) {\r\n  return prisma.monitoredContent.update({ where: { id }, data });\r\n}\r\n\r\nexport async function deleteMonitoredContent(id) {\r\n  return prisma.monitoredContent.delete({ where: { id } });\r\n}\r\n\r\nexport async function deleteMonitoredContentBySocialAccountId(socialAccountId) {\r\n  return prisma.monitoredContent.deleteMany({ where: { socialAccountId } });\r\n}\r\n"
+        }
+    ]
+}

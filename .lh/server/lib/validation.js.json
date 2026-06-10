@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/lib/validation.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780815395770,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780815395770,
+            "name": "Commit-0",
+            "content": "const PLATFORM_KEYS = new Set([\"instagram\", \"facebook\", \"tiktok\", \"youtube\"]);\r\n\r\nconst contentPatterns = {\r\n  instagram: [/instagram\\.com\\/(p|reel)\\//i],\r\n  facebook: [/facebook\\.com\\/.+/i],\r\n  tiktok: [/tiktok\\.com\\/.+\\/video\\//i],\r\n  youtube: [\r\n    /youtube\\.com\\/watch\\?v=/i,\r\n    /youtube\\.com\\/shorts\\//i,\r\n    /youtu\\.be\\//i,\r\n  ],\r\n};\r\n\r\nexport function normalizePlatformKey(value) {\r\n  return String(value || \"\")\r\n    .trim()\r\n    .toLowerCase();\r\n}\r\n\r\nexport function validatePlatform(value) {\r\n  const platform = normalizePlatformKey(value);\r\n  if (!PLATFORM_KEYS.has(platform)) {\r\n    throw new Error(\"Unsupported platform.\");\r\n  }\r\n\r\n  return platform;\r\n}\r\n\r\nexport function validateContentUrl(platform, url) {\r\n  const normalizedPlatform = validatePlatform(platform);\r\n  if (!String(url || \"\").trim()) {\r\n    throw new Error(\"Invalid content URL detected.\");\r\n  }\r\n\r\n  const patterns = contentPatterns[normalizedPlatform];\r\n  if (!patterns.some((pattern) => pattern.test(url))) {\r\n    throw new Error(\"Invalid content URL detected.\");\r\n  }\r\n\r\n  return url.trim();\r\n}\r\n\r\nexport function parseContentRows(platform, rows) {\r\n  const normalizedPlatform = validatePlatform(platform);\r\n  const seen = new Set();\r\n  const parsed = [];\r\n\r\n  for (const row of rows) {\r\n    const url = validateContentUrl(normalizedPlatform, row.url);\r\n    if (seen.has(url)) {\r\n      continue;\r\n    }\r\n    seen.add(url);\r\n    parsed.push({\r\n      url,\r\n      contentType: row.contentType || null,\r\n    });\r\n  }\r\n\r\n  if (!parsed.length) {\r\n    throw new Error(\"Invalid content URL detected.\");\r\n  }\r\n\r\n  return parsed;\r\n}\r\n"
+        }
+    ]
+}

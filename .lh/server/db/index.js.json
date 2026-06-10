@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/db/index.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050440,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050440,
+            "name": "Commit-0",
+            "content": "export { prisma, connectDatabase, disconnectDatabase } from \"./prisma.js\";\r\n"
+        }
+    ]
+}

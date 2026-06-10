@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/services/oauth/common.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780904399021,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780904399021,
+            "name": "Commit-0",
+            "content": "function toStringList(value) {\r\n  if (Array.isArray(value)) {\r\n    return value.map((item) => String(item).trim()).filter(Boolean);\r\n  }\r\n\r\n  if (typeof value === \"string\") {\r\n    return value\r\n      .split(/[\\s,]+/)\r\n      .map((item) => item.trim())\r\n      .filter(Boolean);\r\n  }\r\n\r\n  return [];\r\n}\r\n\r\nexport function fetchJson(url, options = {}) {\r\n  return fetch(url, {\r\n    ...options,\r\n    headers: {\r\n      accept: \"application/json\",\r\n      ...(options.headers || {}),\r\n    },\r\n  }).then(async (response) => {\r\n    const text = await response.text();\r\n    const body = text ? JSON.parse(text) : {};\r\n    if (!response.ok) {\r\n      const message =\r\n        body?.error?.message ||\r\n        body?.error?.error_user_msg ||\r\n        body?.message ||\r\n        `Request failed with status ${response.status}`;\r\n      const error = new Error(message);\r\n      error.status = response.status;\r\n      error.body = body;\r\n      throw error;\r\n    }\r\n\r\n    return body;\r\n  });\r\n}\r\n\r\nexport function buildAuthorizationUrl(baseUrl, params) {\r\n  const url = new URL(baseUrl);\r\n  for (const [key, value] of Object.entries(params)) {\r\n    if (value !== undefined && value !== null && value !== \"\") {\r\n      url.searchParams.set(key, String(value));\r\n    }\r\n  }\r\n  return url.toString();\r\n}\r\n\r\nexport function normalizeScopes(value) {\r\n  return toStringList(value);\r\n}\r\n\r\nexport function normalizeExpiry(expiresIn) {\r\n  if (!expiresIn) {\r\n    return null;\r\n  }\r\n\r\n  return new Date(Date.now() + Number(expiresIn) * 1000);\r\n}\r\n\r\nexport function ensureScopes({ platform, grantedScopes, requiredScopes }) {\r\n  const missing = requiredScopes.filter(\r\n    (scope) => !grantedScopes.includes(scope),\r\n  );\r\n  if (missing.length) {\r\n    throw new Error(`Missing required permissions for ${platform}.`);\r\n  }\r\n\r\n  return grantedScopes;\r\n}\r\n"
+        }
+    ]
+}

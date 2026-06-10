@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/repositories/social-accounts.repository.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050435,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050435,
+            "name": "Commit-0",
+            "content": "import { prisma } from \"../db/prisma.js\";\r\n\r\nexport async function upsertSocialAccount({\r\n  userId,\r\n  platform,\r\n  accountId,\r\n  ...data\r\n}) {\r\n  return prisma.socialAccount.upsert({\r\n    where: {\r\n      userId_platform_accountId: {\r\n        userId,\r\n        platform,\r\n        accountId,\r\n      },\r\n    },\r\n    update: data,\r\n    create: {\r\n      userId,\r\n      platform,\r\n      accountId,\r\n      ...data,\r\n    },\r\n  });\r\n}\r\n\r\nexport async function createSocialAccount(data) {\r\n  return prisma.socialAccount.create({ data });\r\n}\r\n\r\nexport async function findSocialAccountById(id) {\r\n  return prisma.socialAccount.findUnique({ where: { id } });\r\n}\r\n\r\nexport async function findSocialAccountsByUserId(userId) {\r\n  return prisma.socialAccount.findMany({\r\n    where: { userId },\r\n    orderBy: { connectedAt: \"desc\" },\r\n  });\r\n}\r\n\r\nexport async function findSocialAccountByPlatform(userId, platform) {\r\n  return prisma.socialAccount.findFirst({\r\n    where: { userId, platform },\r\n    orderBy: { connectedAt: \"desc\" },\r\n  });\r\n}\r\n\r\nexport async function updateSocialAccount(id, data) {\r\n  return prisma.socialAccount.update({ where: { id }, data });\r\n}\r\n\r\nexport async function deleteSocialAccount(id) {\r\n  return prisma.socialAccount.delete({ where: { id } });\r\n}\r\n"
+        }
+    ]
+}

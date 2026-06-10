@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/routes/auth.routes.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902941705,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902941705,
+            "name": "Commit-0",
+            "content": "import express from \"express\";\r\nimport { registerSchema, loginSchema } from \"../validators/auth.validators.js\";\r\nimport { authCookieOptions } from \"../lib/auth-token.js\";\r\nimport { loginUser, registerUser } from \"../services/auth.service.js\";\r\nimport { requireAuth } from \"../middleware/require-auth.js\";\r\n\r\nconst router = express.Router();\r\n\r\nrouter.post(\"/register\", async (req, res) => {\r\n  try {\r\n    const input = registerSchema.parse(req.body);\r\n    const result = await registerUser(input);\r\n\r\n    res.cookie(\"auth_token\", result.token, authCookieOptions());\r\n    res.status(201).json({ user: result.user });\r\n  } catch (error) {\r\n    res.status(400).json({\r\n      error:\r\n        error instanceof Error ? error.message : \"Unable to register user.\",\r\n    });\r\n  }\r\n});\r\n\r\nrouter.post(\"/login\", async (req, res) => {\r\n  try {\r\n    const input = loginSchema.parse(req.body);\r\n    const result = await loginUser(input);\r\n\r\n    res.cookie(\"auth_token\", result.token, authCookieOptions());\r\n    res.json({ user: result.user });\r\n  } catch (error) {\r\n    res.status(400).json({\r\n      error: error instanceof Error ? error.message : \"Unable to login.\",\r\n    });\r\n  }\r\n});\r\n\r\nrouter.post(\"/logout\", (_req, res) => {\r\n  res.clearCookie(\"auth_token\", {\r\n    httpOnly: true,\r\n    sameSite: \"lax\",\r\n    secure: process.env.NODE_ENV === \"production\",\r\n    path: \"/\",\r\n  });\r\n  res.json({ ok: true });\r\n});\r\n\r\nrouter.get(\"/me\", requireAuth, async (req, res) => {\r\n  res.json({\r\n    user: {\r\n      id: req.auth.userId,\r\n      email: req.auth.email,\r\n      displayName: req.auth.displayName,\r\n    },\r\n  });\r\n});\r\n\r\nexport default router;\r\n"
+        }
+    ]
+}

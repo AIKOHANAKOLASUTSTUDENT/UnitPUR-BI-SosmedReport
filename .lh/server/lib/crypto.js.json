@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/lib/crypto.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780815395775,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780815395775,
+            "name": "Commit-0",
+            "content": "import crypto from \"node:crypto\";\r\n\r\nconst algorithm = \"aes-256-gcm\";\r\n\r\nfunction getKey() {\r\n  const secret = process.env.BACKEND_TOKEN_SECRET;\r\n  if (!secret) {\r\n    throw new Error(\"BACKEND_TOKEN_SECRET is required for token encryption.\");\r\n  }\r\n\r\n  return crypto.createHash(\"sha256\").update(secret).digest();\r\n}\r\n\r\nexport function encryptToken(value) {\r\n  if (!value) {\r\n    return \"\";\r\n  }\r\n\r\n  const iv = crypto.randomBytes(12);\r\n  const cipher = crypto.createCipheriv(algorithm, getKey(), iv);\r\n  const encrypted = Buffer.concat([\r\n    cipher.update(value, \"utf8\"),\r\n    cipher.final(),\r\n  ]);\r\n  const authTag = cipher.getAuthTag();\r\n  return Buffer.concat([iv, authTag, encrypted]).toString(\"base64\");\r\n}\r\n\r\nexport function decryptToken(payload) {\r\n  if (!payload) {\r\n    return \"\";\r\n  }\r\n\r\n  const raw = Buffer.from(payload, \"base64\");\r\n  const iv = raw.subarray(0, 12);\r\n  const authTag = raw.subarray(12, 28);\r\n  const encrypted = raw.subarray(28);\r\n  const decipher = crypto.createDecipheriv(algorithm, getKey(), iv);\r\n  decipher.setAuthTag(authTag);\r\n  return Buffer.concat([decipher.update(encrypted), decipher.final()]).toString(\r\n    \"utf8\",\r\n  );\r\n}\r\n"
+        }
+    ]
+}

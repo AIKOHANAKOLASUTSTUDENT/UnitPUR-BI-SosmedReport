@@ -1,0 +1,18 @@
+{
+    "sourceFile": "vite.config.ts",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780815095536,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780815095536,
+            "name": "Commit-0",
+            "content": "import { defineConfig } from \"vite\";\nimport path from \"path\";\nimport tailwindcss from \"@tailwindcss/vite\";\nimport react from \"@vitejs/plugin-react\";\n\nfunction figmaAssetResolver() {\n  return {\n    name: \"figma-asset-resolver\",\n    resolveId(id) {\n      if (id.startsWith(\"figma:asset/\")) {\n        const filename = id.replace(\"figma:asset/\", \"\");\n        return path.resolve(__dirname, \"src/assets\", filename);\n      }\n    },\n  };\n}\n\nexport default defineConfig({\n  plugins: [\n    figmaAssetResolver(),\n    // The React and Tailwind plugins are both required for Make, even if\n    // Tailwind is not being actively used – do not remove them\n    react(),\n    tailwindcss(),\n  ],\n  resolve: {\n    alias: {\n      // Alias @ to the src directory\n      \"@\": path.resolve(__dirname, \"./src\"),\n    },\n  },\n  server: {\n    proxy: {\n      \"/api\": \"http://127.0.0.1:8787\",\n    },\n  },\n\n  // File types to support raw imports. Never add .css, .tsx, or .ts files to this.\n  assetsInclude: [\"**/*.svg\", \"**/*.csv\"],\n});\n"
+        }
+    ]
+}

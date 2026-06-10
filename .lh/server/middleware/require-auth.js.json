@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/middleware/require-auth.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902941706,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902941706,
+            "name": "Commit-0",
+            "content": "import { extractAuthToken, verifyAuthToken } from \"../lib/auth-token.js\";\r\nimport { findUserById } from \"../repositories/users.repository.js\";\r\n\r\nexport async function requireAuth(req, res, next) {\r\n  try {\r\n    const token = extractAuthToken(req);\r\n    if (!token) {\r\n      return res.status(401).json({ error: \"Authentication required.\" });\r\n    }\r\n\r\n    const payload = verifyAuthToken(token);\r\n    const user = await findUserById(payload.sub);\r\n    if (!user) {\r\n      return res.status(401).json({ error: \"Authentication required.\" });\r\n    }\r\n\r\n    req.auth = {\r\n      userId: user.id,\r\n      email: user.email,\r\n      displayName: user.displayName || \"\",\r\n    };\r\n\r\n    return next();\r\n  } catch {\r\n    return res.status(401).json({ error: \"Authentication required.\" });\r\n  }\r\n}\r\n"
+        }
+    ]
+}

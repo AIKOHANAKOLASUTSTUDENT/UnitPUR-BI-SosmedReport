@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/repositories/report-exports.repository.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050297,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050297,
+            "name": "Commit-0",
+            "content": "import { prisma } from \"../db/prisma.js\";\r\n\r\nexport async function createReportExport(data) {\r\n  return prisma.reportExport.create({ data });\r\n}\r\n\r\nexport async function findReportExportById(id) {\r\n  return prisma.reportExport.findUnique({ where: { id } });\r\n}\r\n\r\nexport async function findReportExportsByUserId(userId) {\r\n  return prisma.reportExport.findMany({\r\n    where: { userId },\r\n    orderBy: { exportedAt: \"desc\" },\r\n  });\r\n}\r\n\r\nexport async function updateReportExport(id, data) {\r\n  return prisma.reportExport.update({ where: { id }, data });\r\n}\r\n\r\nexport async function deleteReportExport(id) {\r\n  return prisma.reportExport.delete({ where: { id } });\r\n}\r\n"
+        }
+    ]
+}

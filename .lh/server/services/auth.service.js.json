@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/services/auth.service.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902941706,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902941706,
+            "name": "Commit-0",
+            "content": "import {\r\n  createUser,\r\n  findUserByEmail,\r\n} from \"../repositories/users.repository.js\";\r\nimport { hashPassword, comparePassword } from \"../lib/password.js\";\r\nimport { signAuthToken } from \"../lib/auth-token.js\";\r\n\r\nfunction toPublicUser(user) {\r\n  return {\r\n    id: user.id,\r\n    email: user.email,\r\n    displayName: user.displayName || \"\",\r\n    createdAt: user.createdAt,\r\n    updatedAt: user.updatedAt,\r\n  };\r\n}\r\n\r\nexport async function registerUser({ email, password, displayName }) {\r\n  const existingUser = await findUserByEmail(email);\r\n  if (existingUser) {\r\n    throw new Error(\"An account with this email already exists.\");\r\n  }\r\n\r\n  const passwordHash = await hashPassword(password);\r\n  const user = await createUser({\r\n    email,\r\n    passwordHash,\r\n    displayName: displayName || null,\r\n  });\r\n\r\n  const token = signAuthToken({ sub: user.id, email: user.email });\r\n\r\n  return {\r\n    user: toPublicUser(user),\r\n    token,\r\n  };\r\n}\r\n\r\nexport async function loginUser({ email, password }) {\r\n  const user = await findUserByEmail(email);\r\n  if (!user || !user.passwordHash) {\r\n    throw new Error(\"Invalid email or password.\");\r\n  }\r\n\r\n  const isValid = await comparePassword(password, user.passwordHash);\r\n  if (!isValid) {\r\n    throw new Error(\"Invalid email or password.\");\r\n  }\r\n\r\n  const token = signAuthToken({ sub: user.id, email: user.email });\r\n\r\n  return {\r\n    user: toPublicUser(user),\r\n    token,\r\n  };\r\n}\r\n"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/db/prisma.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050269,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050269,
+            "name": "Commit-0",
+            "content": "import { PrismaClient } from \"@prisma/client\";\r\n\r\nconst globalForPrisma = globalThis;\r\n\r\nexport const prisma =\r\n  globalForPrisma.__prismaClient ??\r\n  new PrismaClient({\r\n    log: process.env.NODE_ENV === \"development\" ? [\"error\", \"warn\"] : [\"error\"],\r\n  });\r\n\r\nif (process.env.NODE_ENV !== \"production\") {\r\n  globalForPrisma.__prismaClient = prisma;\r\n}\r\n\r\nexport async function connectDatabase() {\r\n  await prisma.$connect();\r\n  return prisma;\r\n}\r\n\r\nexport async function disconnectDatabase() {\r\n  await prisma.$disconnect();\r\n}\r\n"
+        }
+    ]
+}

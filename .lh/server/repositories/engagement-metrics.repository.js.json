@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/repositories/engagement-metrics.repository.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050444,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050444,
+            "name": "Commit-0",
+            "content": "import { prisma } from \"../db/prisma.js\";\r\n\r\nexport async function createEngagementMetric(data) {\r\n  return prisma.engagementMetric.create({ data });\r\n}\r\n\r\nexport async function createEngagementMetricsBatch(data) {\r\n  return prisma.engagementMetric.createMany({ data });\r\n}\r\n\r\nexport async function findEngagementMetricById(id) {\r\n  return prisma.engagementMetric.findUnique({ where: { id } });\r\n}\r\n\r\nexport async function findEngagementMetricsByContentId(monitoredContentId) {\r\n  return prisma.engagementMetric.findMany({\r\n    where: { monitoredContentId },\r\n    orderBy: { capturedAt: \"desc\" },\r\n  });\r\n}\r\n\r\nexport async function findLatestEngagementMetricByContentId(\r\n  monitoredContentId,\r\n) {\r\n  return prisma.engagementMetric.findFirst({\r\n    where: { monitoredContentId },\r\n    orderBy: { capturedAt: \"desc\" },\r\n  });\r\n}\r\n\r\nexport async function updateEngagementMetric(id, data) {\r\n  return prisma.engagementMetric.update({ where: { id }, data });\r\n}\r\n\r\nexport async function deleteEngagementMetric(id) {\r\n  return prisma.engagementMetric.delete({ where: { id } });\r\n}\r\n\r\nexport async function deleteEngagementMetricsByContentId(monitoredContentId) {\r\n  return prisma.engagementMetric.deleteMany({ where: { monitoredContentId } });\r\n}\r\n"
+        }
+    ]
+}

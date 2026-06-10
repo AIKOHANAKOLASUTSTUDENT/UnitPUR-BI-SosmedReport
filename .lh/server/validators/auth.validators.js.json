@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/validators/auth.validators.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902941716,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902941716,
+            "name": "Commit-0",
+            "content": "import { z } from \"zod\";\r\n\r\nexport const registerSchema = z.object({\r\n  email: z.string().trim().toLowerCase().email(),\r\n  password: z.string().min(8).max(128),\r\n  displayName: z.string().trim().min(1).max(255).optional(),\r\n});\r\n\r\nexport const loginSchema = z.object({\r\n  email: z.string().trim().toLowerCase().email(),\r\n  password: z.string().min(1).max(128),\r\n});\r\n"
+        }
+    ]
+}

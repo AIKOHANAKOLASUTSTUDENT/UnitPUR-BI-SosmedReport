@@ -1,0 +1,18 @@
+{
+    "sourceFile": "prisma/migrations/migration_lock.toml",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902044584,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902044584,
+            "name": "Commit-0",
+            "content": "# Please do not edit manually.\r\nprovider = \"postgresql\"\r\n"
+        }
+    ]
+}

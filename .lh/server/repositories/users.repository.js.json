@@ -1,0 +1,18 @@
+{
+    "sourceFile": "server/repositories/users.repository.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1780902050272,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1780902050272,
+            "name": "Commit-0",
+            "content": "import { prisma } from \"../db/prisma.js\";\r\n\r\nexport async function createUser(data) {\r\n  return prisma.user.create({ data });\r\n}\r\n\r\nexport async function findUserById(id) {\r\n  return prisma.user.findUnique({ where: { id } });\r\n}\r\n\r\nexport async function findUserByEmail(email) {\r\n  return prisma.user.findUnique({ where: { email } });\r\n}\r\n\r\nexport async function listUsers() {\r\n  return prisma.user.findMany({ orderBy: { createdAt: \"asc\" } });\r\n}\r\n\r\nexport async function updateUser(id, data) {\r\n  return prisma.user.update({ where: { id }, data });\r\n}\r\n\r\nexport async function deleteUser(id) {\r\n  return prisma.user.delete({ where: { id } });\r\n}\r\n"
+        }
+    ]
+}
