@@ -71,6 +71,15 @@ async function introspectMetaToken(accessToken) {
 }
 
 export async function exchangeInstagramCodeForTokens({ code }) {
+  const tokenResponse = await fetchJson(
+    `https://graph.facebook.com/${META_VERSION}/oauth/access_token`,
+    {
+      method: "GET",
+      headers: { accept: "application/json" },
+      // URLSearchParams is easier to audit when sent as query string.
+    },
+  );
+
   const exchangeUrl = buildAuthorizationUrl(
     `https://graph.facebook.com/${META_VERSION}/oauth/access_token`,
     {
@@ -80,7 +89,6 @@ export async function exchangeInstagramCodeForTokens({ code }) {
       code,
     },
   );
-
   const exchanged = await fetchJson(exchangeUrl);
   const tokenDetails = await introspectMetaToken(exchanged.access_token);
 

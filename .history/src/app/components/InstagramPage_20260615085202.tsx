@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useOutletContext } from "react-router";
 import {
   Box,
@@ -32,8 +32,9 @@ import {
   startPlatformConnection,
 } from "../lib/platformApi";
 
-const PLATFORM_COLOR = "#E1306C";
+import { toast } from "sonner";
 
+const PLATFORM_COLOR = "#E1306C";
 const PLATFORM_BG = "#fdf2f8";
 
 export default function InstagramPage() {
@@ -150,37 +151,6 @@ export default function InstagramPage() {
     calculateTotalEngagement(post);
 
   const connectedAccount = platformConnections.instagram;
-
-  // Phase 1: Fetch and display Instagram profile (login-success only)
-  // We intentionally do NOT implement engagement/media analysis here.
-  const [igProfile, setIgProfile] = useState<any>(null);
-  const [igProfileLoading, setIgProfileLoading] = useState(false);
-
-  useEffect(() => {
-    if (!platformAuth.instagram) return;
-    let cancelled = false;
-    (async () => {
-      try {
-        setIgProfileLoading(true);
-        const res = await fetch(`${""}/api/instagram/profile`, {
-          credentials: "include",
-        });
-        const body = await res.json().catch(() => ({}));
-        if (!res.ok)
-          throw new Error(body?.error || "Unable to fetch Instagram profile.");
-        if (!cancelled) setIgProfile(body.account);
-      } catch (e: any) {
-        if (!cancelled) {
-          toast.error(e?.message || "Unable to fetch Instagram profile.");
-        }
-      } finally {
-        if (!cancelled) setIgProfileLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [platformAuth.instagram]);
 
   if (!platformAuth.instagram) {
     return (

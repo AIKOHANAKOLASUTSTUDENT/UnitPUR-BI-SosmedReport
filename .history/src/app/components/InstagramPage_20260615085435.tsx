@@ -162,9 +162,12 @@ export default function InstagramPage() {
     (async () => {
       try {
         setIgProfileLoading(true);
-        const res = await fetch(`${""}/api/instagram/profile`, {
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL || ""}/api/instagram/profile`,
+          {
+            credentials: "include",
+          },
+        );
         const body = await res.json().catch(() => ({}));
         if (!res.ok)
           throw new Error(body?.error || "Unable to fetch Instagram profile.");

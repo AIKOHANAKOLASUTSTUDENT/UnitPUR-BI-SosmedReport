@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import { useOutletContext } from "react-router";
 import {
   Box,
@@ -32,8 +32,9 @@ import {
   startPlatformConnection,
 } from "../lib/platformApi";
 
-const PLATFORM_COLOR = "#E1306C";
+import { toast } from "sonner";
 
+const PLATFORM_COLOR = "#E1306C";
 const PLATFORM_BG = "#fdf2f8";
 
 export default function InstagramPage() {
@@ -156,15 +157,18 @@ export default function InstagramPage() {
   const [igProfile, setIgProfile] = useState<any>(null);
   const [igProfileLoading, setIgProfileLoading] = useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!platformAuth.instagram) return;
     let cancelled = false;
     (async () => {
       try {
         setIgProfileLoading(true);
-        const res = await fetch(`${""}/api/instagram/profile`, {
-          credentials: "include",
-        });
+        const res = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL || ""}/api/instagram/profile`,
+          {
+            credentials: "include",
+          },
+        );
         const body = await res.json().catch(() => ({}));
         if (!res.ok)
           throw new Error(body?.error || "Unable to fetch Instagram profile.");

@@ -1,0 +1,4 @@
+Phase1 placeholders are isolated under server/services/analytics/analyticsAdapter.js
+- Do not implement fake engagement
+- Do not replace DB tokens logic until Phase2
+
