@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 2,
+            "activePatchIndex": 3,
             "patches": [
                 {
                     "date": 1780815095540,
@@ -16,6 +16,10 @@
                 {
                     "date": 1780902941692,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -72,9 +72,11 @@\n     \"recharts\": \"2.15.2\",\n     \"concurrently\": \"^9.2.1\",\n     \"sonner\": \"2.0.3\",\n     \"@prisma/client\": \"^5.22.0\",\n+    \"bcrypt\": \"^6.0.0\",\n     \"zod\": \"^3.25.76\",\n+    \"jsonwebtoken\": \"^9.0.2\",\n     \"tailwind-merge\": \"3.2.0\",\n     \"tw-animate-css\": \"1.3.8\",\n     \"vaul\": \"1.1.2\",\n     \"xlsx\": \"^0.18.5\"\n"
+                },
+                {
+                    "date": 1781600915432,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -11,9 +11,9 @@\n     \"db:generate\": \"prisma generate\",\n     \"db:migrate\": \"prisma migrate dev\",\n     \"db:deploy\": \"prisma migrate deploy\",\n     \"db:studio\": \"prisma studio\",\n-    \"postinstall\": \"prisma generate\"\n+    \"postinstall\": \"npx prisma generate\"\n   },\n   \"dependencies\": {\n     \"@emotion/react\": \"11.14.0\",\n     \"@emotion/styled\": \"11.14.1\",\n"
                 }
             ],
             "date": 1780815095540,
