@@ -48,8 +48,12 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
 
   const body = await response.json().catch(() => ({}));
 
+  console.log("[requestJson] response status:", response.status, "body:", body);
+
   if (!response.ok) {
-    const error = new Error(body?.error || "Request failed");
+    const error = new Error(
+      body?.error || `Request failed (${response.status})`,
+    );
     (error as Error & { code?: string; status?: number }).code = body?.code;
     (error as Error & { code?: string; status?: number }).status =
       response.status;

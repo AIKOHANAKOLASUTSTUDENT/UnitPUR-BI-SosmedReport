@@ -34,6 +34,8 @@ import {
 dotenv.config();
 
 const app = express();
+// Fix untuk Railway reverse proxy — agar req.protocol = 'https'
+app.set("trust proxy", 1);
 const port = Number(process.env.PORT || 8787);
 
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -93,7 +95,12 @@ app.get("/api/platforms/:platform/connect/start", async (req, res) => {
       String(req.query.frontendOrigin || "").trim() ||
       `${req.protocol}://${req.get("host")}`;
     const state = randomUUID();
-    const callbackUrl = `${req.protocol}://${req.get("host")}/api/platforms/${platform}/callback`;
+    const protocol =
+      process.env.NODE_ENV === "production" ||
+      req.headers["x-forwarded-proto"] === "https"
+        ? "https"
+        : req.protocol;
+    const callbackUrl = `${protocol}://${req.get("host")}/api/platforms/${platform}/callback`;
 
     pendingAuthStates.set(state, {
       platform,

@@ -54,8 +54,8 @@ function fetchJson(url, options = {}) {
 }
 
 function buildMetaAuthUrl(platform, state, callbackUrl) {
-  const cfg = providerConfig[platform];
   const clientId = process.env.META_APP_ID;
+  console.log("[buildMetaAuthUrl] META_APP_ID present:", Boolean(clientId));
   if (!clientId) {
     throw new Error("Meta app credentials are not configured.");
   }
