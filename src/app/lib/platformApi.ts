@@ -1,6 +1,6 @@
 import type { PlatformKey } from "./content";
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
+const API_BASE = import.meta.env?.VITE_API_BASE_URL || "/api";
 
 function normalizeErrorMessage(error: unknown) {
   if (error instanceof Error) {
@@ -99,7 +99,11 @@ export async function startPlatformConnection(platform: PlatformKey) {
       return;
     }
 
-    const allowedOrigin = new URL(payload.callbackUrl).origin;
+    console.log("URL INPUT (callbackUrl):", payload?.callbackUrl);
+    const callbackUrl = payload?.callbackUrl;
+    const allowedOrigin = callbackUrl
+      ? new URL(callbackUrl).origin
+      : window.location.origin;
     const timeoutId = window.setTimeout(
       () => {
         cleanup();

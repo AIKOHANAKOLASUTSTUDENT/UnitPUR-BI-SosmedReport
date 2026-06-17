@@ -77,9 +77,26 @@ function consumeState(state) {
 router.get("/connect", requireAuth, async (req, res) => {
   const state = registerState(req.auth.userId);
 
+  console.log("[instagram connect] META_APP_ID", process.env.META_APP_ID);
+  console.log(
+    "[instagram connect] META_REDIRECT_URI",
+    process.env.META_REDIRECT_URI,
+  );
+
   // Redirect to Meta OAuth.
   // We rely on META_REDIRECT_URI being set to /api/instagram/callback
-  const authorizationUrl = buildInstagramAuthorizationUrl({ state });
+  let authorizationUrl;
+  try {
+    authorizationUrl = buildInstagramAuthorizationUrl({ state });
+  } catch (e) {
+    console.error("[instagram connect] Failed to build authorization URL:", e);
+    return res.status(500).json({
+      error: "Failed to build Instagram authorization URL",
+      details: e instanceof Error ? e.message : String(e),
+    });
+  }
+
+  console.log("[instagram connect] AUTH URL", authorizationUrl);
   return res.redirect(authorizationUrl);
 });
 
