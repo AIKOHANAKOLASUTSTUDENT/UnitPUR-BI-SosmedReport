@@ -1,6 +1,9 @@
 import type { PlatformKey } from "./content";
 
-const API_BASE = import.meta.env?.VITE_API_BASE_URL || "/api";
+const API_BASE = import.meta.env?.VITE_API_BASE_URL || "";
+
+// If VITE_API_BASE_URL is not configured, keep backward compatibility with same-origin /api.
+const API_BASE_FALLBACK = API_BASE || "/api";
 
 function normalizeErrorMessage(error: unknown) {
   if (error instanceof Error) {
@@ -80,8 +83,13 @@ export async function loadBootstrap() {
 }
 
 export async function startPlatformConnection(platform: PlatformKey) {
+  console.log("[CONNECT] API_BASE =", API_BASE);
+
   const frontendOrigin = window.location.origin;
   const payload = await requestJson<{
+    authorizationUrl: string;
+    callbackUrl: string;
+  }>(
     authorizationUrl: string;
     callbackUrl: string;
   }>(
@@ -89,8 +97,14 @@ export async function startPlatformConnection(platform: PlatformKey) {
   );
 
   return new Promise<void>((resolve, reject) => {
+    const finalAuthorizationUrl = payload?.authorizationUrl;
+    console.log(
+      "[startPlatformConnection] authorizationUrl:",
+      finalAuthorizationUrl,
+    );
+
     const popup = window.open(
-      payload.authorizationUrl,
+      finalAuthorizationUrl,
       `${platform}-oauth`,
       "width=620,height=760",
     );
