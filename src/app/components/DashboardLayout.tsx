@@ -1,15 +1,39 @@
-import { useState } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router';
+import { useState } from "react";
+import { Outlet, useNavigate, useLocation } from "react-router";
 import {
-  Box, Drawer, AppBar, Toolbar, List, Typography, ListItem,
-  ListItemButton, ListItemIcon, ListItemText, Avatar, IconButton,
-  Badge, Menu, MenuItem, Switch, Divider, Tooltip,
-} from '@mui/material';
+  Box,
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
+  Typography,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Avatar,
+  IconButton,
+  Badge,
+  Menu,
+  MenuItem,
+  Switch,
+  Divider,
+  Tooltip,
+} from "@mui/material";
 import {
-  LayoutDashboard, FileText, BarChart3, Download, Settings,
-  Bell, LogOut, Instagram, Music2, Youtube, Facebook,
-} from 'lucide-react';
-import type { OutletContextType } from '../types';
+  LayoutDashboard,
+  FileText,
+  BarChart3,
+  Download,
+  Settings,
+  Bell,
+  LogOut,
+  Instagram,
+  Music2,
+  Youtube,
+  Facebook,
+} from "lucide-react";
+import type { OutletContextType } from "../types";
 
 const drawerWidth = 260;
 
@@ -19,40 +43,40 @@ interface Props {
 
 const platformItems = [
   {
-    path: '/dashboard/instagram',
-    label: 'Instagram',
+    path: "/dashboard/instagram",
+    label: "Instagram",
     icon: Instagram,
-    color: '#E1306C',
-    key: 'instagram' as const,
+    color: "#E1306C",
+    key: "instagram" as const,
   },
   {
-    path: '/dashboard/tiktok',
-    label: 'TikTok',
+    path: "/dashboard/tiktok",
+    label: "TikTok",
     icon: Music2,
-    color: '#fe2c55',
-    key: 'tiktok' as const,
+    color: "#fe2c55",
+    key: "tiktok" as const,
   },
   {
-    path: '/dashboard/youtube',
-    label: 'YouTube',
+    path: "/dashboard/youtube",
+    label: "YouTube",
     icon: Youtube,
-    color: '#FF0000',
-    key: 'youtube' as const,
+    color: "#FF0000",
+    key: "youtube" as const,
   },
   {
-    path: '/dashboard/facebook',
-    label: 'Facebook',
+    path: "/dashboard/facebook",
+    label: "Facebook",
     icon: Facebook,
-    color: '#1877F2',
-    key: 'facebook' as const,
+    color: "#1877F2",
+    key: "facebook" as const,
   },
 ];
 
 const reportItems = [
-  { path: '/dashboard', label: 'Overview', icon: LayoutDashboard },
-  { path: '/dashboard/analytics', label: 'Analytics', icon: BarChart3 },
-  { path: '/dashboard/reports', label: 'Reports', icon: FileText },
-  { path: '/dashboard/export', label: 'Export Center', icon: Download },
+  { path: "/dashboard", label: "Overview", icon: LayoutDashboard },
+  { path: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
+  { path: "/dashboard/reports", label: "Reports", icon: FileText },
+  { path: "/dashboard/export", label: "Export Center", icon: Download },
 ];
 
 export default function DashboardLayout({ outletContext }: Props) {
@@ -64,11 +88,13 @@ export default function DashboardLayout({ outletContext }: Props) {
   const { platformAuth } = outletContext;
 
   const isActive = (path: string) =>
-    path === '/dashboard'
-      ? location.pathname === '/dashboard'
+    path === "/dashboard"
+      ? location.pathname === "/dashboard"
       : location.pathname.startsWith(path);
 
-  const totalConnected = Object.values(platformAuth).filter(Boolean).length;
+  const totalConnected = Object.values(platformAuth || {}).filter(
+    Boolean,
+  ).length;
   const totalContent =
     outletContext.instagramPosts.length +
     outletContext.tiktokPosts.length +
@@ -76,24 +102,28 @@ export default function DashboardLayout({ outletContext }: Props) {
     outletContext.facebookPosts.length;
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <AppBar
         position="fixed"
         sx={{
           width: `calc(100% - ${drawerWidth}px)`,
           ml: `${drawerWidth}px`,
-          bgcolor: 'white',
-          color: 'text.primary',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+          bgcolor: "white",
+          color: "text.primary",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
         }}
       >
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 600 }}>
             Social Media Engagement Report
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="caption" sx={{ color: 'text.secondary', mr: 1 }}>
-              {totalConnected} platform{totalConnected !== 1 ? 's' : ''} connected · {totalContent} items analyzed
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Typography
+              variant="caption"
+              sx={{ color: "text.secondary", mr: 1 }}
+            >
+              {totalConnected} platform{totalConnected !== 1 ? "s" : ""}{" "}
+              connected · {totalContent} items analyzed
             </Typography>
             <IconButton>
               <Badge badgeContent={3} color="error">
@@ -101,20 +131,35 @@ export default function DashboardLayout({ outletContext }: Props) {
               </Badge>
             </IconButton>
             <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
-              <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>U</Avatar>
+              <Avatar sx={{ width: 32, height: 32, bgcolor: "primary.main" }}>
+                U
+              </Avatar>
             </IconButton>
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+            >
               <MenuItem>
                 <Settings size={18} style={{ marginRight: 8 }} />
                 Account Settings
               </MenuItem>
               <MenuItem>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   Dark Mode
-                  <Switch checked={darkMode} onChange={(e) => setDarkMode(e.target.checked)} size="small" />
+                  <Switch
+                    checked={darkMode}
+                    onChange={(e) => setDarkMode(e.target.checked)}
+                    size="small"
+                  />
                 </Box>
               </MenuItem>
-              <MenuItem onClick={() => { setAnchorEl(null); navigate('/'); }}>
+              <MenuItem
+                onClick={() => {
+                  setAnchorEl(null);
+                  navigate("/");
+                }}
+              >
                 <LogOut size={18} style={{ marginRight: 8 }} />
                 Logout
               </MenuItem>
@@ -129,23 +174,26 @@ export default function DashboardLayout({ outletContext }: Props) {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          '& .MuiDrawer-paper': {
+          "& .MuiDrawer-paper": {
             width: drawerWidth,
-            boxSizing: 'border-box',
-            bgcolor: '#1e293b',
-            color: 'white',
-            borderRight: 'none',
+            boxSizing: "border-box",
+            bgcolor: "#1e293b",
+            color: "white",
+            borderRight: "none",
           },
         }}
       >
         <Box sx={{ p: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, color: 'white' }}>
+          <Typography variant="h6" sx={{ fontWeight: 700, color: "white" }}>
             📊 Analytics Hub
           </Typography>
         </Box>
 
         <List sx={{ px: 2 }}>
-          <Typography variant="overline" sx={{ color: '#64748b', px: 1, fontSize: 10, letterSpacing: 1.5 }}>
+          <Typography
+            variant="overline"
+            sx={{ color: "#64748b", px: 1, fontSize: 10, letterSpacing: 1.5 }}
+          >
             REPORTS
           </Typography>
           {reportItems.map((item) => {
@@ -157,16 +205,26 @@ export default function DashboardLayout({ outletContext }: Props) {
                   onClick={() => navigate(item.path)}
                   sx={{
                     borderRadius: 2,
-                    bgcolor: active ? 'rgba(59,130,246,0.2)' : 'transparent',
-                    '&:hover': { bgcolor: active ? 'rgba(59,130,246,0.3)' : 'rgba(255,255,255,0.08)' },
+                    bgcolor: active ? "rgba(59,130,246,0.2)" : "transparent",
+                    "&:hover": {
+                      bgcolor: active
+                        ? "rgba(59,130,246,0.3)"
+                        : "rgba(255,255,255,0.08)",
+                    },
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: 36, color: active ? '#60a5fa' : '#94a3b8' }}>
+                  <ListItemIcon
+                    sx={{ minWidth: 36, color: active ? "#60a5fa" : "#94a3b8" }}
+                  >
                     <Icon size={18} />
                   </ListItemIcon>
                   <ListItemText
                     primary={item.label}
-                    primaryTypographyProps={{ fontSize: 14, fontWeight: active ? 600 : 400, color: active ? 'white' : '#cbd5e1' }}
+                    primaryTypographyProps={{
+                      fontSize: 14,
+                      fontWeight: active ? 600 : 400,
+                      color: active ? "white" : "#cbd5e1",
+                    }}
                   />
                 </ListItemButton>
               </ListItem>
@@ -174,10 +232,13 @@ export default function DashboardLayout({ outletContext }: Props) {
           })}
         </List>
 
-        <Divider sx={{ borderColor: 'rgba(255,255,255,0.08)', mx: 2, my: 1 }} />
+        <Divider sx={{ borderColor: "rgba(255,255,255,0.08)", mx: 2, my: 1 }} />
 
         <List sx={{ px: 2 }}>
-          <Typography variant="overline" sx={{ color: '#64748b', px: 1, fontSize: 10, letterSpacing: 1.5 }}>
+          <Typography
+            variant="overline"
+            sx={{ color: "#64748b", px: 1, fontSize: 10, letterSpacing: 1.5 }}
+          >
             PLATFORMS
           </Typography>
           {platformItems.map((item) => {
@@ -190,20 +251,40 @@ export default function DashboardLayout({ outletContext }: Props) {
                   onClick={() => navigate(item.path)}
                   sx={{
                     borderRadius: 2,
-                    bgcolor: active ? `${item.color}25` : 'transparent',
-                    '&:hover': { bgcolor: active ? `${item.color}35` : 'rgba(255,255,255,0.08)' },
+                    bgcolor: active ? `${item.color}25` : "transparent",
+                    "&:hover": {
+                      bgcolor: active
+                        ? `${item.color}35`
+                        : "rgba(255,255,255,0.08)",
+                    },
                   }}
                 >
-                  <ListItemIcon sx={{ minWidth: 36, color: active ? item.color : '#94a3b8' }}>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 36,
+                      color: active ? item.color : "#94a3b8",
+                    }}
+                  >
                     <Icon size={18} />
                   </ListItemIcon>
                   <ListItemText
                     primary={item.label}
-                    primaryTypographyProps={{ fontSize: 14, fontWeight: active ? 600 : 400, color: active ? 'white' : '#cbd5e1' }}
+                    primaryTypographyProps={{
+                      fontSize: 14,
+                      fontWeight: active ? 600 : 400,
+                      color: active ? "white" : "#cbd5e1",
+                    }}
                   />
                   {connected && (
                     <Tooltip title="Connected">
-                      <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#22c55e' }} />
+                      <Box
+                        sx={{
+                          width: 8,
+                          height: 8,
+                          borderRadius: "50%",
+                          bgcolor: "#22c55e",
+                        }}
+                      />
                     </Tooltip>
                   )}
                 </ListItemButton>
@@ -212,14 +293,23 @@ export default function DashboardLayout({ outletContext }: Props) {
           })}
         </List>
 
-        <Box sx={{ mt: 'auto', p: 3, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <Typography variant="caption" sx={{ color: '#64748b' }}>
+        <Box
+          sx={{
+            mt: "auto",
+            p: 3,
+            borderTop: "1px solid rgba(255,255,255,0.08)",
+          }}
+        >
+          <Typography variant="caption" sx={{ color: "#64748b" }}>
             Last updated: {new Date().toLocaleTimeString()}
           </Typography>
         </Box>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, mt: 8 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3, mt: 8 }}
+      >
         <Outlet context={outletContext} />
       </Box>
     </Box>

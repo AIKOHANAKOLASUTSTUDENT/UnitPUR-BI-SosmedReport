@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Toaster } from "sonner";
+import ErrorBoundary from "./components/ErrorBoundary";
 import DashboardLayout from "./components/DashboardLayout";
 import MainDashboard from "./components/MainDashboard";
 import ReportsPage from "./components/ReportsPage";
@@ -50,14 +51,15 @@ export default function App() {
 
   const refreshBootstrap = async () => {
     const bootstrap = await loadBootstrap();
-    setPlatformAuth(bootstrap.platformAuth);
+
+    setPlatformAuth(bootstrap.platformAuth as unknown as PlatformAuth);
     setPlatformConnections(
-      bootstrap.platformConnections as PlatformConnections,
+      bootstrap.platformConnections as unknown as PlatformConnections,
     );
-    setInstagramPosts(bootstrap.instagramPosts as InstagramPost[]);
-    setTiktokPosts(bootstrap.tiktokPosts as TikTokPost[]);
-    setYoutubePosts(bootstrap.youtubePosts as YouTubePost[]);
-    setFacebookPosts(bootstrap.facebookPosts as FacebookPost[]);
+    setInstagramPosts(bootstrap.instagramPosts as unknown as InstagramPost[]);
+    setTiktokPosts(bootstrap.tiktokPosts as unknown as TikTokPost[]);
+    setYoutubePosts(bootstrap.youtubePosts as unknown as YouTubePost[]);
+    setFacebookPosts(bootstrap.facebookPosts as unknown as FacebookPost[]);
   };
 
   useEffect(() => {
@@ -86,24 +88,26 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Toaster position="top-right" richColors />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route
-            path="/dashboard"
-            element={<DashboardLayout outletContext={outletContext} />}
-          >
-            <Route index element={<MainDashboard />} />
-            <Route path="instagram" element={<InstagramPage />} />
-            <Route path="tiktok" element={<TikTokPage />} />
-            <Route path="youtube" element={<YouTubePage />} />
-            <Route path="facebook" element={<FacebookPage />} />
-            <Route path="analytics" element={<AnalyticsPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="export" element={<ExportCenterPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/dashboard"
+              element={<DashboardLayout outletContext={outletContext} />}
+            >
+              <Route index element={<MainDashboard />} />
+              <Route path="instagram" element={<InstagramPage />} />
+              <Route path="tiktok" element={<TikTokPage />} />
+              <Route path="youtube" element={<YouTubePage />} />
+              <Route path="facebook" element={<FacebookPage />} />
+              <Route path="analytics" element={<AnalyticsPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="export" element={<ExportCenterPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

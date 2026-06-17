@@ -52,14 +52,31 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export async function loadBootstrap() {
-  return requestJson<{
-    platformAuth: Record<PlatformKey, boolean>;
-    platformConnections: Record<string, unknown>;
-    instagramPosts: Array<Record<string, unknown>>;
-    facebookPosts: Array<Record<string, unknown>>;
-    tiktokPosts: Array<Record<string, unknown>>;
-    youtubePosts: Array<Record<string, unknown>>;
+  const bootstrap = await requestJson<{
+    platformAuth?: Record<PlatformKey, boolean> | null;
+    platformConnections?: Record<string, unknown> | null;
+    instagramPosts?: Array<Record<string, unknown>> | null;
+    facebookPosts?: Array<Record<string, unknown>> | null;
+    tiktokPosts?: Array<Record<string, unknown>> | null;
+    youtubePosts?: Array<Record<string, unknown>> | null;
   }>("/bootstrap");
+
+  // eslint-disable-next-line no-console
+  console.log("[bootstrap] API Response:", bootstrap);
+
+  return {
+    platformAuth: bootstrap?.platformAuth ?? {
+      instagram: false,
+      tiktok: false,
+      youtube: false,
+      facebook: false,
+    },
+    platformConnections: bootstrap?.platformConnections ?? {},
+    instagramPosts: bootstrap?.instagramPosts ?? [],
+    facebookPosts: bootstrap?.facebookPosts ?? [],
+    tiktokPosts: bootstrap?.tiktokPosts ?? [],
+    youtubePosts: bootstrap?.youtubePosts ?? [],
+  };
 }
 
 export async function startPlatformConnection(platform: PlatformKey) {
