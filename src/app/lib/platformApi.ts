@@ -1,6 +1,8 @@
 import type { PlatformKey } from "./content";
 
-const API_BASE = import.meta.env?.VITE_API_BASE_URL || "";
+const API_BASE =
+  (import.meta as unknown as { env?: { VITE_API_BASE_URL?: string } }).env
+    ?.VITE_API_BASE_URL || "";
 
 // If VITE_API_BASE_URL is not configured, keep backward compatibility with same-origin /api.
 const API_BASE_FALLBACK = API_BASE || "/api";
@@ -83,41 +85,48 @@ export async function loadBootstrap() {
 }
 
 export async function startPlatformConnection(platform: PlatformKey) {
+  // Required debug logs
   console.log("[CONNECT] API_BASE =", API_BASE);
 
   const frontendOrigin = window.location.origin;
+
   const payload = await requestJson<{
     authorizationUrl: string;
     callbackUrl: string;
   }>(
-    authorizationUrl: string;
-    callbackUrl: string;
-  }>(
-    `/platforms/${platform}/connect/start?frontendOrigin=${encodeURIComponent(frontendOrigin)}`,
+    `/platforms/${platform}/connect/start?frontendOrigin=${encodeURIComponent(
+      frontendOrigin,
+    )}`,
   );
 
+  console.log("[CONNECT] payload =", payload);
+  console.log("[CONNECT] authorizationUrl =", payload?.authorizationUrl);
+
+  const finalAuthorizationUrl = payload?.authorizationUrl;
+  if (!finalAuthorizationUrl) {
+    // If backend returns relative URL, we still log payload above.
+    throw new Error(
+      "Missing authorizationUrl from backend connect start. (See payload log)",
+    );
+  }
+
+  // Must not navigate to /dashboard/instagram/connect or /instagram/connect.
+  const popup = window.open(
+    finalAuthorizationUrl,
+    "instagram-oauth",
+    "width=620,height=760",
+  );
+
+  if (!popup) {
+    throw new Error("Unable to open the login popup.");
+  }
+
+  const callbackUrl = payload?.callbackUrl;
+  const allowedOrigin = callbackUrl
+    ? new URL(callbackUrl).origin
+    : window.location.origin;
+
   return new Promise<void>((resolve, reject) => {
-    const finalAuthorizationUrl = payload?.authorizationUrl;
-    console.log(
-      "[startPlatformConnection] authorizationUrl:",
-      finalAuthorizationUrl,
-    );
-
-    const popup = window.open(
-      finalAuthorizationUrl,
-      `${platform}-oauth`,
-      "width=620,height=760",
-    );
-    if (!popup) {
-      reject(new Error("Unable to open the login popup."));
-      return;
-    }
-
-    console.log("URL INPUT (callbackUrl):", payload?.callbackUrl);
-    const callbackUrl = payload?.callbackUrl;
-    const allowedOrigin = callbackUrl
-      ? new URL(callbackUrl).origin
-      : window.location.origin;
     const timeoutId = window.setTimeout(
       () => {
         cleanup();
@@ -130,25 +139,9 @@ export async function startPlatformConnection(platform: PlatformKey) {
       5 * 60 * 1000,
     );
 
-    const pollId = window.setInterval(() => {
-      if (popup.closed) {
-        cleanup();
-        reject(
-          new Error(
-            "Login failed. Please check your account permissions and try again.",
-          ),
-        );
-      }
-    }, 750);
-
     const handleMessage = (event: MessageEvent) => {
-      if (event.origin !== allowedOrigin) {
-        return;
-      }
-
-      if (!event.data || event.data.platform !== platform) {
-        return;
-      }
+      if (event.origin !== allowedOrigin) return;
+      if (!event.data || event.data.platform !== platform) return;
 
       if (event.data.type === "platform-auth-success") {
         cleanup();
@@ -165,14 +158,25 @@ export async function startPlatformConnection(platform: PlatformKey) {
       );
     };
 
+    const pollId = window.setInterval(() => {
+      if ((popup as WindowProxy).closed) {
+        cleanup();
+        reject(
+          new Error(
+            "Login failed. Please check your account permissions and try again.",
+          ),
+        );
+      }
+    }, 750);
+
     function cleanup() {
       window.clearTimeout(timeoutId);
       window.clearInterval(pollId);
       window.removeEventListener("message", handleMessage);
       try {
-        popup.close();
+        (popup as WindowProxy).close();
       } catch {
-        // Ignore popup close failures.
+        // ignore
       }
     }
 
@@ -205,12 +209,15 @@ export async function exportPlatformData(
   format: "csv" | "xlsx",
   fields: string[],
 ) {
-  const response = await fetch(`${API_BASE}/platforms/${platform}/export`, {
-    method: "POST",
-    credentials: "include",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({ format, fields }),
-  });
+  const response = await fetch(
+    `${API_BASE_FALLBACK}/platforms/${platform}/export`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ format, fields }),
+    },
+  );
 
   if (!response.ok) {
     const body = await response.json().catch(() => ({}));
