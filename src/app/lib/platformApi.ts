@@ -35,7 +35,9 @@ function normalizeErrorMessage(error: unknown) {
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const baseUrl = API_BASE || "/api";
+
+  const response = await fetch(`${baseUrl}${path}`, {
     credentials: "include",
     headers: {
       "content-type": "application/json",
@@ -45,6 +47,7 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   });
 
   const body = await response.json().catch(() => ({}));
+
   if (!response.ok) {
     const error = new Error(body?.error || "Request failed");
     (error as Error & { code?: string; status?: number }).code = body?.code;
